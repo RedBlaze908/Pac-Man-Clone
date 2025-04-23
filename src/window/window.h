@@ -9,9 +9,18 @@ const float cellSize = 38.f;
 const int cols = 25;
 const int rows = 25;
 
+struct tile {
+	int8_t val;
+	sf::RectangleShape t;
+};
+
+struct data {
+	int x;
+	int y;
+};
 
 class Game {
-	std::vector<std::vector<sf::RectangleShape>> grid;
+	std::vector<std::vector<tile>> grid;
 	sf::RenderWindow window;
 
 	sf::Clock deltaClock;
@@ -23,6 +32,7 @@ class Game {
 	bool over = false;*/
 
 	TextureManager texture;
+	data playerPos{12, 12};
 
 	void makeGrid();
 
@@ -30,6 +40,8 @@ class Game {
 
 	void moveRight();
 	void moveLeft();
+	void moveUp();
+	void moveDown();
 
 
 public:

@@ -10,5 +10,8 @@ TextureManager::TextureManager() {
 TextureManager::~TextureManager() {}
 
 sf::Texture* TextureManager::getTexture(int8_t val) {
-	return &map[val];
+    auto it = map.find(val);
+
+    if (it != map.end()) return &it->second;
+    else return nullptr;
 }

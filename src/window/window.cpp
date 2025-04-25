@@ -2,22 +2,40 @@
 
 //Private
 void Game::makeGrid(){
+    std::ifstream file("../../../src/window/map.txt");
+    if (!file.is_open()) {
+        std::cerr << "Error: Map not found!" << std::endl;
+        exit(EXIT_FAILURE);
+    }
 
+    int val;
+    std::string line;
     for (int i = 0; i < cols; ++i) {
+        std::getline(file, line);
+        std::istringstream ss(line);
+
         for (int j = 0; j < rows; ++j) {
-            grid[i][j].t.setSize(sf::Vector2f(cellSize, cellSize));
-            grid[i][j].t.setOutlineColor(sf::Color::Black);
-            grid[i][j].t.setOutlineThickness(1);
-            grid[i][j].t.setPosition(sf::Vector2f(i * cellSize + (window.getSize().x / 4), j * cellSize + 10));
-            grid[i][j].val = 0;
+            ss >> val;
+            grid[j][i].val = val;
+            sf::Texture* Texture_ = texture.getTexture(static_cast<int8_t>(val));
+            if (!Texture_ && val != 0) {
+                std::cerr << "Error: Texture Not Found!" << std::endl;
+                exit(EXIT_FAILURE);
+            }
+
+            grid[j][i].t.setSize(sf::Vector2f(cellSize, cellSize));
+            grid[j][i].t.setOutlineColor(sf::Color::Black);
+            grid[j][i].t.setOutlineThickness(1);
+            grid[j][i].t.setPosition(sf::Vector2f(j * cellSize + (window.getSize().x / 4), i * cellSize + 10));
+            grid[j][i].t.setTexture(Texture_);
         }
     }
 }
 
 void Game::playerSpawn() {
-    sf::Texture* player = texture.getTexture(-1);
+    sf::Texture* player = texture.getTexture(static_cast<int8_t>(-1));
     if (!player) {
-        std::cout << "Error While Trying To Open The Player Texture!" << std::endl;
+        std::cerr << "Error While Trying To Open The Player Texture!" << std::endl;
         exit(EXIT_FAILURE);
     }
     grid[12][12].t.setTexture(player);
@@ -25,40 +43,45 @@ void Game::playerSpawn() {
 }
 
 void Game::moveRight() {
-    if (grid[playerPos.x + 1][playerPos.y].val == 0) {
-        grid[playerPos.x][playerPos.y].t.setTexture(NULL);
+    //std::cout << grid[playerPos.x + 1][playerPos.y].val << std::endl;
+    if ((playerPos.x + 1) < 25 && grid[playerPos.x + 1][playerPos.y].val == 0) {
+        sf::Texture* Texture_ = texture.getTexture(static_cast<int8_t>(0));
+        grid[playerPos.x][playerPos.y].t.setTexture(Texture_);
         grid[playerPos.x][playerPos.y].val = 0;
-        grid[playerPos.x + 1][playerPos.y].t.setTexture(texture.getTexture(-1));
+        grid[playerPos.x + 1][playerPos.y].t.setTexture(texture.getTexture(static_cast<int8_t>(-1)));
         grid[playerPos.x + 1][playerPos.y].val = -1;
         playerPos.x++;
     }
 }
 
 void Game::moveLeft() {
-    if (grid[playerPos.x - 1][playerPos.y].val == 0) {
-        grid[playerPos.x][playerPos.y].t.setTexture(NULL);
+    if ((playerPos.x + 1) < 24 && grid[playerPos.x - 1][playerPos.y].val == 0) {
+        sf::Texture* Texture_ = texture.getTexture(static_cast<int8_t>(0));
+        grid[playerPos.x][playerPos.y].t.setTexture(Texture_);
         grid[playerPos.x][playerPos.y].val = 0;
-        grid[playerPos.x - 1][playerPos.y].t.setTexture(texture.getTexture(-1));
+        grid[playerPos.x - 1][playerPos.y].t.setTexture(texture.getTexture(static_cast<int8_t>(-1)));
         grid[playerPos.x - 1][playerPos.y].val = -1;
         playerPos.x--;
     }
 }
 
 void Game::moveUp() {
-    if (grid[playerPos.x][playerPos.y - 1].val == 0) {
-        grid[playerPos.x][playerPos.y].t.setTexture(NULL);
+    if ((playerPos.x + 1) < 24 && grid[playerPos.x][playerPos.y - 1].val == 0) {
+        sf::Texture* Texture_ = texture.getTexture(static_cast<int8_t>(0));
+        grid[playerPos.x][playerPos.y].t.setTexture(Texture_);
         grid[playerPos.x][playerPos.y].val = 0;
-        grid[playerPos.x][playerPos.y - 1].t.setTexture(texture.getTexture(-1));
+        grid[playerPos.x][playerPos.y - 1].t.setTexture(texture.getTexture(static_cast<int8_t>(-1)));
         grid[playerPos.x][playerPos.y - 1].val = -1;
         playerPos.y--;
     }
 }
 
 void Game::moveDown() {
-    if (grid[playerPos.x][playerPos.y + 1].val == 0) {
-        grid[playerPos.x][playerPos.y].t.setTexture(NULL);
+    if ((playerPos.x + 1) < 24 && grid[playerPos.x][playerPos.y + 1].val == 0) {
+        sf::Texture* Texture_ = texture.getTexture(static_cast<int8_t>(0));
+        grid[playerPos.x][playerPos.y].t.setTexture(Texture_);
         grid[playerPos.x][playerPos.y].val = 0;
-        grid[playerPos.x][playerPos.y + 1].t.setTexture(texture.getTexture(-1));
+        grid[playerPos.x][playerPos.y + 1].t.setTexture(texture.getTexture(static_cast<int8_t>(-1)));
         grid[playerPos.x][playerPos.y + 1].val = -1;
         playerPos.y++;
     }
@@ -66,7 +89,7 @@ void Game::moveDown() {
 
 
 //Public
-Game::Game() {}
+Game::Game() : ptrFunc([](){}) {}
 
 Game::~Game() {}
 
@@ -108,24 +131,32 @@ void Game::init() {
                 btnClock.getElapsedTime().asSeconds() >= 0.1f) {
 
                 Game::moveLeft();
+                ptrFunc = std::bind(&Game::moveLeft, this);
+                timerExpired = true;
                 btnClock.restart();
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) &&
                 btnClock.getElapsedTime().asSeconds() >= 0.1f) {
 
                 Game::moveRight();
+                ptrFunc = std::bind(&Game::moveRight, this);
+                timerExpired = true;
                 btnClock.restart();
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
                 btnClock.getElapsedTime().asSeconds() >= 0.1f) {
 
                 Game::moveDown();
+                ptrFunc = std::bind(&Game::moveDown, this);
+                timerExpired = true;
                 btnClock.restart();
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) &&
                 btnClock.getElapsedTime().asSeconds() >= 0.1f) {
 
                 Game::moveUp();
+                ptrFunc = std::bind(&Game::moveUp, this);
+                timerExpired = true;
                 btnClock.restart();
             }
         }
@@ -135,7 +166,12 @@ void Game::init() {
 
         ImGui::SFML::Update(window, deltaTime);
         
-        
+        if (!timerExpired && clock.getElapsedTime().asSeconds() >= 0.1f &&
+            playerPos.x < 24 && playerPos.x > 0 && playerPos.y < 24 && playerPos.y > 0) {
+            ptrFunc();
+            clock.restart();
+        }
+        else timerExpired = false;
 
         window.clear();
 

@@ -37,7 +37,7 @@ namespace sf
 namespace priv
 {
 ////////////////////////////////////////////////////////////
-/// \brief Android implementation of inputs (keyboard + mouse)
+/// \brief iOS implementation of inputs (keyboard + mouse)
 ///
 ////////////////////////////////////////////////////////////
 class InputImpl

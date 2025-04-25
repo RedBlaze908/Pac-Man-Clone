@@ -200,7 +200,7 @@ void WindowImpl::processJoystickEvents()
         {
             Event event;
             event.type = connected ? Event::JoystickConnected : Event::JoystickDisconnected;
-            event.joystickConnect.joystickId = i;
+            event.joystickButton.joystickId = i;
             pushEvent(event);
 
             // Clear previous axes positions

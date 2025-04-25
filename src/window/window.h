@@ -2,15 +2,17 @@
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "../texture_manager/textureManager.h"
-#include <iostream>
+#include <fstream>
+#include <sstream>
 #include <vector>
+#include <functional>
 
 const float cellSize = 38.f;
 const int cols = 25;
 const int rows = 25;
 
 struct tile {
-	int8_t val;
+	int val;
 	sf::RectangleShape t;
 };
 
@@ -43,6 +45,7 @@ class Game {
 	void moveUp();
 	void moveDown();
 
+	std::function<void()> ptrFunc;
 
 public:
 	Game();

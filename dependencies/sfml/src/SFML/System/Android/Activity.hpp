@@ -80,7 +80,6 @@ struct ActivityStates
     bool mainOver;
 
     Vector2i screenSize;
-    Vector2i fullScreenSize;
 
     bool initialized;
     bool terminated;

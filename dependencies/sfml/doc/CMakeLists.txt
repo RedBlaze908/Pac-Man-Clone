@@ -1,3 +1,4 @@
+
 # find doxygen
 if(SFML_OS_MACOSX)
     # Add some path to search doxygen in more directories.
@@ -26,12 +27,7 @@ if(SFML_OS_WINDOWS)
                  PATHS "C:/Program Files/HTML Help Workshop" "C:/Program Files (x86)/HTML Help Workshop"
                  DOC "HTML Help Compiler program")
     if(DOXYGEN_HHC_PROGRAM)
-        if(DOXYGEN_VERSION VERSION_LESS "1.10.0")
-            set(DOXYGEN_GENERATE_HTMLHELP YES)
-        else()
-            message("Due to conflicts with the HTML output settings in Doxygen ${DOXYGEN_VERSION}, the HTML Help generation will be disabled")
-            set(DOXYGEN_GENERATE_HTMLHELP NO)
-        endif()
+        set(DOXYGEN_GENERATE_HTMLHELP YES)
     else()
         set(DOXYGEN_GENERATE_HTMLHELP NO)
     endif()

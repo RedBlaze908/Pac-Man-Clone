@@ -27,7 +27,6 @@
 ////////////////////////////////////////////////////////////
 #include <SFML/Audio/ALCheck.hpp>
 #include <SFML/System/Err.hpp>
-#include <SFML/System/ThreadLocalPtr.hpp>
 #include <string>
 
 #if defined(__APPLE__)
@@ -37,15 +36,6 @@
         #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     #endif
 #endif
-
-namespace
-{
-    // A nested named namespace is used here to allow unity builds of SFML.
-    namespace AlCheckImpl
-    {
-        sf::ThreadLocalPtr<ALenum> lastError(AL_NO_ERROR);
-    }
-}
 
 namespace sf
 {
@@ -59,8 +49,6 @@ void alCheckError(const char* file, unsigned int line, const char* expression)
 
     if (errorCode != AL_NO_ERROR)
     {
-        AlCheckImpl::lastError = &errorCode;
-
         std::string fileString = file;
         std::string error = "Unknown error";
         std::string description = "No description";
@@ -111,15 +99,6 @@ void alCheckError(const char* file, unsigned int line, const char* expression)
               << "\nError description:\n   " << error << "\n   " << description << "\n"
               << std::endl;
     }
-}
-
-
-////////////////////////////////////////////////////////////
-ALenum alGetLastErrorImpl()
-{
-    ALenum lastError = AlCheckImpl::lastError ? *AlCheckImpl::lastError : AL_NO_ERROR;
-    AlCheckImpl::lastError = AL_NO_ERROR;
-    return lastError;
 }
 
 } // namespace priv

@@ -102,8 +102,7 @@ WindowHandle WindowImplAndroid::getSystemHandle() const
 void WindowImplAndroid::processEvents()
 {
     // Process incoming OS events
-    while (ALooper_pollOnce(0, NULL, NULL, NULL) >= 0)
-        ;
+    ALooper_pollAll(0, NULL, NULL, NULL);
 
     ActivityStates& states = getActivity();
     Lock lock(states.mutex);

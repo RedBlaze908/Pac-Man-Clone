@@ -128,7 +128,7 @@ void Game::init() {
             if (event.type == sf::Event::Closed) window.close();
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
-                btnClock.getElapsedTime().asSeconds() >= 0.1f) {
+                btnClock.getElapsedTime().asSeconds() >= 0.2f) {
 
                 Game::moveLeft();
                 ptrFunc = std::bind(&Game::moveLeft, this);
@@ -136,7 +136,7 @@ void Game::init() {
                 btnClock.restart();
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) &&
-                btnClock.getElapsedTime().asSeconds() >= 0.1f) {
+                btnClock.getElapsedTime().asSeconds() >= 0.2f) {
 
                 Game::moveRight();
                 ptrFunc = std::bind(&Game::moveRight, this);
@@ -144,7 +144,7 @@ void Game::init() {
                 btnClock.restart();
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
-                btnClock.getElapsedTime().asSeconds() >= 0.1f) {
+                btnClock.getElapsedTime().asSeconds() >= 0.2f) {
 
                 Game::moveDown();
                 ptrFunc = std::bind(&Game::moveDown, this);
@@ -152,7 +152,7 @@ void Game::init() {
                 btnClock.restart();
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) &&
-                btnClock.getElapsedTime().asSeconds() >= 0.1f) {
+                btnClock.getElapsedTime().asSeconds() >= 0.2f) {
 
                 Game::moveUp();
                 ptrFunc = std::bind(&Game::moveUp, this);
@@ -166,7 +166,7 @@ void Game::init() {
 
         ImGui::SFML::Update(window, deltaTime);
         
-        if (!timerExpired && clock.getElapsedTime().asSeconds() >= 0.1f &&
+        if (!timerExpired && clock.getElapsedTime().asSeconds() >= 0.2f &&
             playerPos.x < 24 && playerPos.x > 0 && playerPos.y < 24 && playerPos.y > 0) {
             ptrFunc();
             clock.restart();
